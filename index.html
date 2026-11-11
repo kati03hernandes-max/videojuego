@@ -40,6 +40,7 @@
             align-items: center;
             min-height: 100vh;
             padding: 15px;
+            position: relative;
         }
 
         h1, h2, h3 { font-family: 'Fredoka', sans-serif; }
@@ -47,6 +48,32 @@
         .app-container {
             width: 100%;
             max-width: 1000px;
+        }
+
+        /* BOTÓN FLOTANTE DE MÚSICA */
+        .music-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            background: #ffffff;
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.05);
+            background: #e0f2fe;
         }
 
         .screen { display: none; }
@@ -151,6 +178,18 @@
         .btn-secondary { background-color: var(--secondary-color); color: white; }
         .btn-secondary:hover { background-color: var(--secondary-hover); transform: translateY(-2px); }
 
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        .btn-outline:hover {
+            background-color: #e0f2fe;
+            transform: translateY(-2px);
+        }
+
         .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .top-bar {
@@ -164,6 +203,12 @@
             margin-bottom: 15px;
             flex-wrap: wrap;
             gap: 10px;
+        }
+
+        .turn-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .player-turn-badge {
@@ -398,6 +443,9 @@
 </head>
 <body>
 
+    <audio id="bg-music" src="musica.mp3" loop></audio>
+    <button id="btn-music" class="music-btn">🎵 Música: ON</button>
+
     <div class="app-container">
         
         <section id="welcome-screen" class="screen active">
@@ -426,7 +474,8 @@
 
         <section id="game-screen" class="screen">
             <header class="top-bar">
-                <div class="turn-indicator">
+                <div class="turn-box">
+                    <button id="btn-back-menu" class="btn btn-outline">⚙️ Cambiar Jugadores</button>
                     <span>Turno actual: <strong id="current-player-name" class="player-turn-badge">Jugador 1</strong></span>
                 </div>
                 <div id="players-scores-bar" class="players-scores-bar"></div>
@@ -456,7 +505,7 @@
                     </div>
 
                     <div id="question-box" class="question-box hidden">
-                        <span id="question-category" class="category-tag">Desafío Sorpresa ❓</span>
+                        <span id="question-category" class="category-tag">Desafío Emoción Primaria ❓</span>
                         <h3 id="question-text" class="question-text">Pregunta...</h3>
                         <div id="options-container" class="options-container"></div>
                     </div>
@@ -531,72 +580,73 @@
 
         let boardSpecialCells = {};
 
+        // BANCO DE PREGUNTAS CENTRADO EN EMOCIONES PRIMARIAS / BÁSICAS
         const questionBank = [
             {
-                category: "Alfabetización Emocional",
-                text: "Mañana entregas un examen. Tu corazón late rápido y sientes un nudo en el estómago. ¿Qué emoción sientes?",
+                category: "Emoción Primaria: Tristeza",
+                text: "Expresas: 'Me siento solo/a', 'Me desmotiva todo' o 'Estoy sufriendo'. ¿A qué emoción primaria corresponden estos sentimientos?",
                 options: [
-                    { text: "A) Ira o Rabia", correct: false },
-                    { text: "B) Ansiedad / Nerviosismo", correct: true },
-                    { text: "C) Aburrimiento", correct: false }
+                    { text: "A) Alegría", correct: false },
+                    { text: "B) Tristeza", correct: true },
+                    { text: "C) Enfado / Rabia", correct: false }
                 ],
-                feedbackCorrect: "¡Muy bien! Reconocer los síntomas del cuerpo te ayuda a identificar la ansiedad.",
-                feedbackIncorrect: "El corazón acelerado y el nudo en el estómago son síntomas claros de nerviosismo o ansiedad."
+                feedbackCorrect: "¡Muy bien! Sentirse desganado, solo o desmotivado son manifestaciones básicas de la Tristeza.",
+                feedbackIncorrect: "Estas expresiones nacen de la Tristeza, una emoción primaria fundamental para procesar la pérdida o el dolor."
             },
             {
-                category: "Alfabetización Emocional",
-                text: "Tu amigo juega con otro grupo sin ti. Sientes molestia y tristeza. ¿Qué emoción es?",
+                category: "Emoción Primaria: Enfado / Rabia",
+                text: "Dices: 'Me pone furioso/a', 'Siento que es injusto' o 'Me siento muy enojado/a'. ¿Cuál es la emoción primaria base?",
                 options: [
-                    { text: "A) Celos / Sentirse excluido", correct: true },
-                    { text: "B) Entusiasmo", correct: false },
-                    { text: "C) Culpa", correct: false }
+                    { text: "A) Enfado / Rabia", correct: true },
+                    { text: "B) Asco / Rechazo", correct: false },
+                    { text: "C) Sorpresa", correct: false }
                 ],
-                feedbackCorrect: "¡Excelente! Ponerle nombre a la exclusión te ayuda a expresarte asertivamente.",
-                feedbackIncorrect: "Sentir molestia y tristeza en ese contexto se llama celos o sentirse excluido."
+                feedbackCorrect: "¡Excelente! La rabia o el enfado son la emoción primaria ante la percepción de una injusticia o amenaza.",
+                feedbackIncorrect: "La furia y el enojo se agrupan dentro de la emoción primaria del Enfado o Rabia."
             },
             {
-                category: "Autorregulación",
-                text: "Un compañero comete un error en el partido y pierden. Sientes mucha rabia. ¿Qué haces?",
+                category: "Emoción Primaria: Alegría",
+                text: "Te sientes eufórico/a, ilusionado/a, a gusto o dices '¡Me encanta!'. ¿A qué emoción primaria pertenecen?",
                 options: [
-                    { text: "A) Gritarle para que ponga atención.", correct: false },
-                    { text: "B) Respirar 5 segundos y decir: 'En la próxima nos recuperamos'.", correct: true },
-                    { text: "C) Irte del juego enojado.", correct: false }
+                    { text: "A) Calma", correct: false },
+                    { text: "B) Alegría", correct: true },
+                    { text: "C) Sorpresa", correct: false }
                 ],
-                feedbackCorrect: "¡Gran autorregulación! Respirar ayuda a mantener la calma y cuidar la amistad.",
-                feedbackIncorrect: "Gritar solo crea más tensión. Respirar 5 segundos ayuda a calmar la rabia impulsiva."
+                feedbackCorrect: "¡Correcto! El buen humor, la ilusión y el entusiasmo forman parte de la emoción primaria de la Alegría.",
+                feedbackIncorrect: "La euforia, ilusión y felicidad son ramificaciones directas de la Alegría."
             },
             {
-                category: "Reencuadre Cognitivo",
-                text: "Pensamiento: 'Me voy a equivocar al hablar en público y se reirán'. ¿Cómo lo cambias?",
+                category: "Emoción Primaria: Sorpresa",
+                text: "Dices: 'Estoy perplejo/a', 'Siento curiosidad' o 'Estoy desconcertado/a'. ¿Qué emoción primaria estás experimentando?",
                 options: [
-                    { text: "A) 'Mejor me hago el enfermo'.", correct: false },
-                    { text: "B) 'Estoy preparado. Si me equivoco es normal y puedo seguir'.", correct: true },
-                    { text: "C) 'Nadie me quiere escuchar'.", correct: false }
+                    { text: "A) Sorpresa", correct: true },
+                    { text: "B) Tristeza", correct: false },
+                    { text: "C) Enfado", correct: false }
                 ],
-                feedbackCorrect: "¡Excelente reencuadre! Cambiaste un pensamiento limitante por uno resiliente.",
-                feedbackIncorrect: "El reencuadre busca transformar el miedo en una afirmación positiva y realista."
+                feedbackCorrect: "¡Muy bien! Estar asombrado, impresionado o confundido corresponde a la emoción primaria de la Sorpresa.",
+                feedbackIncorrect: "El asombro y la curiosidad son reacciones típicas de la emoción primaria de Sorpresa."
             },
             {
-                category: "Búsqueda de Ayuda",
-                text: "Llevas días abrumado y tus propias estrategias no funcionan. ¿Qué es lo correcto?",
+                category: "Emoción Primaria: Asco y Rechazo",
+                text: "Sientes aversión, dices 'No me gusta' o 'Me siento excluido/a'. ¿Qué emoción primaria se está manifestando?",
                 options: [
-                    { text: "A) Quedarte callado hasta que pase.", correct: false },
-                    { text: "B) Decirle a un adulto de confianza: 'No me siento bien y necesito ayuda'.", correct: true },
-                    { text: "C) Aislarte por completo.", correct: false }
+                    { text: "A) Tristeza", correct: false },
+                    { text: "B) Asco y Rechazo", correct: true },
+                    { text: "C) Alegría", correct: false }
                 ],
-                feedbackCorrect: "¡Exacto! Buscar ayuda en un adulto de confianza muestra madurez y valentía.",
-                feedbackIncorrect: "Quedarte callado prolonga el malestar. Buscar apoyo en un adulto es seguro."
+                feedbackCorrect: "¡Exacto! El asco y el rechazo son respuestas primarias para protegernos o marcar distancia.",
+                feedbackIncorrect: "Sentir repugnancia o rechazo hacia algo se clasifica en la emoción primaria de Asco."
             },
             {
-                category: "Empatía Colectiva",
-                text: "Un compañero está triste en el recreo por una mala nota. ¿Cómo respondes?",
+                category: "Emoción Primaria: Calma y Amor",
+                text: "Dices: 'Me siento sereno/a', 'Siento paz', 'Siento confianza' y 'Siento cariño'. ¿Qué estado o emoción primaria predomina?",
                 options: [
-                    { text: "A) Decirle que debió estudiar más.", correct: false },
-                    { text: "B) Decirle en privado: 'Si necesitas hablar o estar acompañado, aquí estoy'.", correct: true },
-                    { text: "C) Ignorarlo para no meterte en líos.", correct: false }
+                    { text: "A) Calma y Amor", correct: true },
+                    { text: "B) Sorpresa", correct: false },
+                    { text: "C) Rabia", correct: false }
                 ],
-                feedbackCorrect: "¡Hermosa empatía! Acompañar a otros fortalece la amistad y la comunidad.",
-                feedbackIncorrect: "La empatía consiste en ofrecer apoyo y comprensión respetuosa en momentos difíciles."
+                feedbackCorrect: "¡Hermosa respuesta! La serenidad, la paz, el cariño y la confianza brotan de la Calma y el Amor.",
+                feedbackIncorrect: "Sentir paz, respeto y cariño corresponde al núcleo protector de la Calma y el Amor."
             }
         ];
 
@@ -607,6 +657,28 @@
         let turnStartPos = 0;
         let availableQuestions = [];
 
+        // CONTROL DE MÚSICA DE FONDO
+        const bgMusic = document.getElementById('bg-music');
+        const btnMusic = document.getElementById('btn-music');
+        let isMusicPlaying = false;
+
+        btnMusic.addEventListener('click', toggleMusic);
+
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                btnMusic.textContent = "🔇 Música: OFF";
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    btnMusic.textContent = "🎵 Música: ON";
+                    isMusicPlaying = true;
+                }).catch(() => {
+                    console.log("Error al reproducir audio.");
+                });
+            }
+        }
+
         const welcomeScreen = document.getElementById('welcome-screen');
         const gameScreen = document.getElementById('game-screen');
         const endScreen = document.getElementById('end-screen');
@@ -614,6 +686,7 @@
         const numPlayersSelect = document.getElementById('num-players-select');
         const playersConfigContainer = document.getElementById('players-config-container');
         const btnStart = document.getElementById('btn-start');
+        const btnBackMenu = document.getElementById('btn-back-menu');
         const btnRoll = document.getElementById('btn-roll');
         const btnNext = document.getElementById('btn-next');
         const btnRestart = document.getElementById('btn-restart');
@@ -643,20 +716,34 @@
         numPlayersSelect.addEventListener('change', renderAvatarPickers);
         renderAvatarPickers();
 
-        btnStart.addEventListener('click', startGame);
+        btnStart.addEventListener('click', () => {
+            if (!isMusicPlaying) {
+                bgMusic.volume = 0.4;
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    btnMusic.textContent = "🎵 Música: ON";
+                }).catch(e => console.log("Permiso de audio pendiente."));
+            }
+            startGame();
+        });
+
+        btnBackMenu.addEventListener('click', () => {
+            gameScreen.classList.remove('active');
+            welcomeScreen.classList.add('active');
+        });
+
         btnRoll.addEventListener('click', rollDice);
         btnNext.addEventListener('click', closeModal);
         btnRestart.addEventListener('click', restartGame);
         window.addEventListener('resize', drawSnakesAndLadders);
 
-        // Generar Serpientes y Escaleras (Casillas numeradas del 1 al 24)
         function generateRandomSnakesAndLadders() {
             boardSpecialCells = {};
             const usedCells = new Set([0, 25]);
 
             let laddersCount = 0;
             while (laddersCount < 3) {
-                let start = Math.floor(Math.random() * 12) + 1; // 1 a 12
+                let start = Math.floor(Math.random() * 12) + 1;
                 let target = start + Math.floor(Math.random() * 5) + 4;
                 target = Math.min(24, target);
 
@@ -671,7 +758,7 @@
             let snakesCount = 0;
             const snakeColors = ['#2e7d32', '#c62828', '#d84315'];
             while (snakesCount < 3) {
-                let start = Math.floor(Math.random() * 13) + 11; // 11 a 23
+                let start = Math.floor(Math.random() * 13) + 11;
                 let target = start - (Math.floor(Math.random() * 5) + 4);
                 target = Math.max(1, target);
 
@@ -749,17 +836,15 @@
         function createBoard() {
             boardEl.innerHTML = '';
             
-            // Reordenamiento exacto con 25 casillas completas + START (0)
             const cellsOrder = [
                 21, 22, 23, 24, 25,
                 20, 19, 18, 17, 16,
                 11, 12, 13, 14, 15,
                 10, 9,  8,  7,  6,
                 1,  2,  3,  4,  5,
-                0   // Casilla START en fila dedicada
+                0
             ];
 
-            // Ajustar grid CSS para alojar la fila de START
             boardEl.style.gridTemplateColumns = 'repeat(5, 1fr)';
 
             cellsOrder.forEach(num => {
@@ -768,7 +853,7 @@
                 cell.id = `cell-${num}`;
 
                 if (num === 0) {
-                    cell.style.gridColumn = 'span 5'; // Fila completa para START
+                    cell.style.gridColumn = 'span 5';
                     cell.classList.add('start-cell');
                     cell.innerHTML = `
                         <span class="cell-num">SALIDA</span>
@@ -1087,4 +1172,3 @@
     </script>
 </body>
 </html>
-
