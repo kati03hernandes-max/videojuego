@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serpientes y Escaleras: Gestión Emocional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary-color: #4a90e2;
+            --primary-hover: #357abd;
+            --secondary-color: #ff9f43;
+            --secondary-hover: #ee5253;
+            --text-dark: #2f3542;
+            --text-light: #747d8c;
+            --border-radius: 16px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+            --start-bg: #fef08a;
+            --start-border: #eab308;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        h1, h2, h3 { font-family: 'Fredoka', sans-serif; }
+
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .badge {
+            background: #e1f5fe;
+            color: #0288d1;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        h1 { font-size: 2.2rem; color: var(--primary-color); margin: 20px 0 10px; }
+
+        .description {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .players-config-container {
+            margin: 25px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .player-config-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .player-label {
+            font-weight: 700;
+            font-size: 1rem;
+            min-width: 90px;
+            text-align: left;
+        }
+
+        .avatar-picker {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .avatar-opt {
+            font-size: 1.4rem;
+            padding: 6px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .avatar-opt:hover { transform: scale(1.15); }
+        .avatar-opt.selected { border-color: var(--primary-color); background-color: #e0f2fe; }
+
+        .custom-select {
+            padding: 8px 16px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            margin-left: 10px;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .btn {
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+
+        .btn-secondary { background-color: var(--secondary-color); color: white; }
+        .btn-secondary:hover { background-color: var(--secondary-hover); transform: translateY(-2px); }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .player-turn-badge {
+            padding: 6px 14px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .players-scores-bar { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .p-score-tag {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 20px;
+        }
+
+        @media (max-width: 850px) { .game-layout { grid-template-columns: 1fr; } }
+
+        .board-container {
+            background: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .board-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            width: 100%;
+            height: 100%;
+        }
+
+        #snakes-ladders-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .cell {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 8px;
+            font-weight: 700;
+            background-color: #f8fafc;
+        }
+
+        .cell-num { font-size: 0.9rem; color: #64748b; }
+        .cell-icon { font-size: 1.1rem; align-self: center; }
+
+        .cell.start-cell { 
+            background-color: var(--start-bg); 
+            border: 3px solid var(--start-border);
+            color: #854d0e;
+        }
+
+        .cell.meta { background-color: #fef9c3; border-color: #facc15; }
+
+        .tokens-container {
+            display: flex;
+            gap: 3px;
+            position: absolute;
+            bottom: 4px; right: 4px;
+            flex-wrap: wrap;
+            z-index: 10;
+        }
+
+        .player-token {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            border: 2px solid white;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .control-panel { display: flex; flex-direction: column; gap: 15px; }
+
+        .dice-box {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .flat-dice {
+            width: 80px;
+            height: 80px;
+            background-color: #ffffff;
+            border: 3px solid #2f3542;
+            border-radius: 14px;
+            margin: 0 auto 15px;
+            position: relative;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.4s ease;
+        }
+
+        .flat-dice.rolling { animation: spinDice 0.6s ease-in-out; }
+
+        @keyframes spinDice {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.15); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .dot {
+            width: 12px; height: 12px;
+            background-color: #2f3542;
+            border-radius: 50%;
+            position: absolute;
+            display: none;
+        }
+
+        .d-center       { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .d-top-left     { top: 14px; left: 14px; }
+        .d-top-right    { top: 14px; right: 14px; }
+        .d-mid-left     { top: 50%; left: 14px; transform: translateY(-50%); }
+        .d-mid-right    { top: 50%; right: 14px; transform: translateY(-50%); }
+        .d-bottom-left  { bottom: 14px; left: 14px; }
+        .d-bottom-right { bottom: 14px; right: 14px; }
+
+        .face-1 .d-center { display: block; background-color: #e74c3c; width: 14px; height: 14px; }
+        .face-2 .d-top-left, .face-2 .d-bottom-right { display: block; }
+        .face-3 .d-top-left, .face-3 .d-center, .face-3 .d-bottom-right { display: block; }
+        .face-4 .d-top-left, .face-4 .d-top-right, .face-4 .d-bottom-left, .face-4 .d-bottom-right { display: block; }
+        .face-5 .d-top-left, .face-5 .d-top-right, .face-5 .d-center, .face-5 .d-bottom-left, .face-5 .d-bottom-right { display: block; }
+        .face-6 .d-top-left, .face-6 .d-top-right, .face-6 .d-mid-left, .face-6 .d-mid-right, .face-6 .d-bottom-left, .face-6 .d-bottom-right { display: block; }
+
+        .instruction { font-size: 0.85rem; color: var(--text-light); margin-top: 10px; }
+
+        .question-box {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .question-box.hidden { display: none; }
+
+        .category-tag {
+            background: #f3e8ff; color: #7e22ce;
+            padding: 4px 10px; border-radius: 6px;
+            font-size: 0.8rem; font-weight: 700;
+        }
+
+        .question-text { font-size: 0.95rem; margin: 12px 0; line-height: 1.4; }
+
+        .options-container { display: flex; flex-direction: column; gap: 8px; }
+
+        .option-btn {
+            background: #f8f9fa; border: 2px solid #e9ecef;
+            padding: 10px 14px; border-radius: 8px;
+            text-align: left; font-size: 0.88rem;
+            cursor: pointer; transition: all 0.2s ease;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .option-btn:hover { border-color: var(--primary-color); background: #f0f7ff; }
+
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
+            padding: 20px; z-index: 100;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: white; padding: 30px; border-radius: var(--border-radius);
+            max-width: 450px; text-align: center; box-shadow: var(--shadow);
+        }
+
+        .modal-icon { font-size: 3rem; margin-bottom: 10px; }
+
+        .movement-text {
+            font-weight: 700; margin: 15px 0;
+            padding: 10px; border-radius: 8px; background: #eef2f5;
+            color: var(--text-dark);
+        }
+
+        .winner-title { color: var(--primary-color); margin-bottom: 15px; }
+
+        .final-scoreboard {
+            display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;
+        }
+
+        .tools-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0 30px; text-align: left;
+        }
+
+        @media (max-width: 600px) { .tools-grid { grid-template-columns: 1fr; } }
+
+        .tool-item { background: #f7fafc; padding: 12px; border-radius: 10px; display: flex; gap: 12px; }
+        .tool-icon { font-size: 1.8rem; }
+        .tool-item p { font-size: 0.85rem; color: var(--text-light); }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <section id="welcome-screen" class="screen active">
+            <div class="card">
+                <span class="badge">Juego Multijugador Educativo</span>
+                <h1>Serpientes y Escaleras Emocionales 🐍🪜</h1>
+                <p class="description">
+                    Selecciona el número de jugadores y escoge tu figura. Todos iniciarán en la casilla amarilla de **START (Salida)**.
+                </p>
+                
+                <div style="margin-bottom: 20px;">
+                    <label for="num-players-select"><strong>Número de Jugadores:</strong></label>
+                    <select id="num-players-select" class="custom-select">
+                        <option value="1">1 Jugador</option>
+                        <option value="2" selected>2 Jugadores</option>
+                        <option value="3">3 Jugadores</option>
+                        <option value="4">4 Jugadores</option>
+                    </select>
+                </div>
+
+                <div id="players-config-container" class="players-config-container"></div>
+
+                <button id="btn-start" class="btn btn-primary">¡Comenzar Partida!</button>
+            </div>
+        </section>
+
+        <section id="game-screen" class="screen">
+            <header class="top-bar">
+                <div class="turn-indicator">
+                    <span>Turno actual: <strong id="current-player-name" class="player-turn-badge">Jugador 1</strong></span>
+                </div>
+                <div id="players-scores-bar" class="players-scores-bar"></div>
+            </header>
+
+            <main class="game-layout">
+                <div class="board-container">
+                    <div class="board-wrapper">
+                        <div id="board" class="board"></div>
+                        <canvas id="snakes-ladders-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <div class="dice-box">
+                        <div id="flat-dice" class="flat-dice face-1">
+                            <span class="dot d-center"></span>
+                            <span class="dot d-top-left"></span>
+                            <span class="dot d-top-right"></span>
+                            <span class="dot d-mid-left"></span>
+                            <span class="dot d-mid-right"></span>
+                            <span class="dot d-bottom-left"></span>
+                            <span class="dot d-bottom-right"></span>
+                        </div>
+                        <button id="btn-roll" class="btn btn-secondary">🎲 Tirar Dado</button>
+                        <p id="dice-instruction" class="instruction">Tira el dado para avanzar.</p>
+                    </div>
+
+                    <div id="question-box" class="question-box hidden">
+                        <span id="question-category" class="category-tag">Desafío Sorpresa ❓</span>
+                        <h3 id="question-text" class="question-text">Pregunta...</h3>
+                        <div id="options-container" class="options-container"></div>
+                    </div>
+                </div>
+            </main>
+
+            <div id="feedback-modal" class="modal">
+                <div class="modal-content">
+                    <div id="feedback-icon" class="modal-icon">✨</div>
+                    <h3 id="feedback-title">¡Reflexión Emocional!</h3>
+                    <p id="feedback-message">Descripción pedagógica...</p>
+                    <p id="feedback-movement" class="movement-text"></p>
+                    <button id="btn-next" class="btn btn-primary">Siguiente Turno ➔</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="end-screen" class="screen">
+            <div class="card final-card">
+                <h2>🎉 ¡Tenemos un Ganador!</h2>
+                <h3 id="winner-announcement" class="winner-title">¡Jugador 1 ha llegado a la Meta!</h3>
+                
+                <div id="final-scoreboard" class="final-scoreboard"></div>
+
+                <h3>🎒 Caja de Herramientas Emocionales Aprendidas:</h3>
+                <div class="tools-grid">
+                    <div class="tool-item">
+                        <div class="tool-icon">🔍</div>
+                        <div>
+                            <strong>Escucha las señales de tu cuerpo:</strong>
+                            <p>El ritmo cardíaco y la presión estomacal son alertas tempranas de nervios o ansiedad.</p>
+                        </div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="tool-icon">🧘‍♂️</div>
+                        <div>
+                            <strong>Pausa de respiración profunda:</strong>
+                            <p>Respirar 5 segundos ayuda a mantener la calma en los momentos de frustración.</p>
+                        </div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="tool-icon">💡</div>
+                        <div>
+                            <strong>Reencuadre Cognitivo:</strong>
+                            <p>Sustituye la duda con: "Si cometo un error es normal, aprendo y sigo intentando".</p>
+                        </div>
+                    </div>
+                    <div class="tool-item">
+                        <div class="tool-icon">🤝</div>
+                        <div>
+                            <strong>Apoyo Mutuo y Empatía:</strong>
+                            <p>Pedir ayuda a adultos de confianza y escuchar a tus amigos crea comunidades fuertes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btn-restart" class="btn btn-primary">Nueva Partida (Nuevo Tablero) 🔄</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const availableAvatars = ['🪖', '✈️', '🚗', '🚀', '🦄', '🧸', '👑', '⛵'];
+
+        const playerColors = [
+            { name: 'Jugador 1', hex: '#e74c3c' },
+            { name: 'Jugador 2', hex: '#3498db' },
+            { name: 'Jugador 3', hex: '#2ecc71' },
+            { name: 'Jugador 4', hex: '#f1c40f' }
+        ];
+
+        let boardSpecialCells = {};
+
+        const questionBank = [
+            {
+                category: "Alfabetización Emocional",
+                text: "Mañana entregas un examen. Tu corazón late rápido y sientes un nudo en el estómago. ¿Qué emoción sientes?",
+                options: [
+                    { text: "A) Ira o Rabia", correct: false },
+                    { text: "B) Ansiedad / Nerviosismo", correct: true },
+                    { text: "C) Aburrimiento", correct: false }
+                ],
+                feedbackCorrect: "¡Muy bien! Reconocer los síntomas del cuerpo te ayuda a identificar la ansiedad.",
+                feedbackIncorrect: "El corazón acelerado y el nudo en el estómago son síntomas claros de nerviosismo o ansiedad."
+            },
+            {
+                category: "Alfabetización Emocional",
+                text: "Tu amigo juega con otro grupo sin ti. Sientes molestia y tristeza. ¿Qué emoción es?",
+                options: [
+                    { text: "A) Celos / Sentirse excluido", correct: true },
+                    { text: "B) Entusiasmo", correct: false },
+                    { text: "C) Culpa", correct: false }
+                ],
+                feedbackCorrect: "¡Excelente! Ponerle nombre a la exclusión te ayuda a expresarte asertivamente.",
+                feedbackIncorrect: "Sentir molestia y tristeza en ese contexto se llama celos o sentirse excluido."
+            },
+            {
+                category: "Autorregulación",
+                text: "Un compañero comete un error en el partido y pierden. Sientes mucha rabia. ¿Qué haces?",
+                options: [
+                    { text: "A) Gritarle para que ponga atención.", correct: false },
+                    { text: "B) Respirar 5 segundos y decir: 'En la próxima nos recuperamos'.", correct: true },
+                    { text: "C) Irte del juego enojado.", correct: false }
+                ],
+                feedbackCorrect: "¡Gran autorregulación! Respirar ayuda a mantener la calma y cuidar la amistad.",
+                feedbackIncorrect: "Gritar solo crea más tensión. Respirar 5 segundos ayuda a calmar la rabia impulsiva."
+            },
+            {
+                category: "Reencuadre Cognitivo",
+                text: "Pensamiento: 'Me voy a equivocar al hablar en público y se reirán'. ¿Cómo lo cambias?",
+                options: [
+                    { text: "A) 'Mejor me hago el enfermo'.", correct: false },
+                    { text: "B) 'Estoy preparado. Si me equivoco es normal y puedo seguir'.", correct: true },
+                    { text: "C) 'Nadie me quiere escuchar'.", correct: false }
+                ],
+                feedbackCorrect: "¡Excelente reencuadre! Cambiaste un pensamiento limitante por uno resiliente.",
+                feedbackIncorrect: "El reencuadre busca transformar el miedo en una afirmación positiva y realista."
+            },
+            {
+                category: "Búsqueda de Ayuda",
+                text: "Llevas días abrumado y tus propias estrategias no funcionan. ¿Qué es lo correcto?",
+                options: [
+                    { text: "A) Quedarte callado hasta que pase.", correct: false },
+                    { text: "B) Decirle a un adulto de confianza: 'No me siento bien y necesito ayuda'.", correct: true },
+                    { text: "C) Aislarte por completo.", correct: false }
+                ],
+                feedbackCorrect: "¡Exacto! Buscar ayuda en un adulto de confianza muestra madurez y valentía.",
+                feedbackIncorrect: "Quedarte callado prolonga el malestar. Buscar apoyo en un adulto es seguro."
+            },
+            {
+                category: "Empatía Colectiva",
+                text: "Un compañero está triste en el recreo por una mala nota. ¿Cómo respondes?",
+                options: [
+                    { text: "A) Decirle que debió estudiar más.", correct: false },
+                    { text: "B) Decirle en privado: 'Si necesitas hablar o estar acompañado, aquí estoy'.", correct: true },
+                    { text: "C) Ignorarlo para no meterte en líos.", correct: false }
+                ],
+                feedbackCorrect: "¡Hermosa empatía! Acompañar a otros fortalece la amistad y la comunidad.",
+                feedbackIncorrect: "La empatía consiste en ofrecer apoyo y comprensión respetuosa en momentos difíciles."
+            }
+        ];
+
+        let selectedAvatars = ['🪖', '✈️', '🚗', '🚀'];
+        let players = [];
+        let currentTurnIndex = 0;
+        let isDiceRolled = false;
+        let turnStartPos = 0;
+        let availableQuestions = [];
+
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const endScreen = document.getElementById('end-screen');
+
+        const numPlayersSelect = document.getElementById('num-players-select');
+        const playersConfigContainer = document.getElementById('players-config-container');
+        const btnStart = document.getElementById('btn-start');
+        const btnRoll = document.getElementById('btn-roll');
+        const btnNext = document.getElementById('btn-next');
+        const btnRestart = document.getElementById('btn-restart');
+
+        const boardEl = document.getElementById('board');
+        const canvas = document.getElementById('snakes-ladders-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const currentPlayerName = document.getElementById('current-player-name');
+        const playersScoresBar = document.getElementById('players-scores-bar');
+        const winnerAnnouncement = document.getElementById('winner-announcement');
+        const finalScoreboard = document.getElementById('final-scoreboard');
+
+        const flatDice = document.getElementById('flat-dice');
+        const diceInstruction = document.getElementById('dice-instruction');
+        const questionBox = document.getElementById('question-box');
+        const questionCategory = document.getElementById('question-category');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+
+        const feedbackModal = document.getElementById('feedback-modal');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const feedbackMovement = document.getElementById('feedback-movement');
+
+        numPlayersSelect.addEventListener('change', renderAvatarPickers);
+        renderAvatarPickers();
+
+        btnStart.addEventListener('click', startGame);
+        btnRoll.addEventListener('click', rollDice);
+        btnNext.addEventListener('click', closeModal);
+        btnRestart.addEventListener('click', restartGame);
+        window.addEventListener('resize', drawSnakesAndLadders);
+
+        // Generar Serpientes y Escaleras (Casillas numeradas del 1 al 24)
+        function generateRandomSnakesAndLadders() {
+            boardSpecialCells = {};
+            const usedCells = new Set([0, 25]);
+
+            let laddersCount = 0;
+            while (laddersCount < 3) {
+                let start = Math.floor(Math.random() * 12) + 1; // 1 a 12
+                let target = start + Math.floor(Math.random() * 5) + 4;
+                target = Math.min(24, target);
+
+                if (!usedCells.has(start) && !usedCells.has(target)) {
+                    boardSpecialCells[start] = { type: 'ladder', target: target, color: '#8d5524' };
+                    usedCells.add(start);
+                    usedCells.add(target);
+                    laddersCount++;
+                }
+            }
+
+            let snakesCount = 0;
+            const snakeColors = ['#2e7d32', '#c62828', '#d84315'];
+            while (snakesCount < 3) {
+                let start = Math.floor(Math.random() * 13) + 11; // 11 a 23
+                let target = start - (Math.floor(Math.random() * 5) + 4);
+                target = Math.max(1, target);
+
+                if (!usedCells.has(start) && !usedCells.has(target)) {
+                    boardSpecialCells[start] = { type: 'snake', target: target, color: snakeColors[snakesCount] };
+                    usedCells.add(start);
+                    usedCells.add(target);
+                    snakesCount++;
+                }
+            }
+        }
+
+        function renderAvatarPickers() {
+            const numPlayers = parseInt(numPlayersSelect.value);
+            playersConfigContainer.innerHTML = '';
+
+            for (let i = 0; i < numPlayers; i++) {
+                const row = document.createElement('div');
+                row.className = 'player-config-row';
+
+                const label = document.createElement('span');
+                label.className = 'player-label';
+                label.style.color = playerColors[i].hex;
+                label.textContent = playerColors[i].name;
+
+                const picker = document.createElement('div');
+                picker.className = 'avatar-picker';
+
+                availableAvatars.forEach(avatar => {
+                    const opt = document.createElement('span');
+                    opt.className = `avatar-opt ${selectedAvatars[i] === avatar ? 'selected' : ''}`;
+                    opt.textContent = avatar;
+                    opt.addEventListener('click', () => {
+                        selectedAvatars[i] = avatar;
+                        renderAvatarPickers();
+                    });
+                    picker.appendChild(opt);
+                });
+
+                row.appendChild(label);
+                row.appendChild(picker);
+                playersConfigContainer.appendChild(row);
+            }
+        }
+
+        function startGame() {
+            const numPlayers = parseInt(numPlayersSelect.value);
+            players = [];
+            
+            for (let i = 0; i < numPlayers; i++) {
+                players.push({
+                    id: i,
+                    name: playerColors[i].name,
+                    color: playerColors[i].hex,
+                    avatar: selectedAvatars[i],
+                    position: 0,
+                    score: 0
+                });
+            }
+
+            currentTurnIndex = 0;
+            availableQuestions = [...questionBank];
+
+            generateRandomSnakesAndLadders();
+
+            welcomeScreen.classList.remove('active');
+            gameScreen.classList.add('active');
+
+            createBoard();
+            updateUI();
+            
+            setTimeout(drawSnakesAndLadders, 100);
+        }
+
+        function createBoard() {
+            boardEl.innerHTML = '';
+            
+            // Reordenamiento exacto con 25 casillas completas + START (0)
+            const cellsOrder = [
+                21, 22, 23, 24, 25,
+                20, 19, 18, 17, 16,
+                11, 12, 13, 14, 15,
+                10, 9,  8,  7,  6,
+                1,  2,  3,  4,  5,
+                0   // Casilla START en fila dedicada
+            ];
+
+            // Ajustar grid CSS para alojar la fila de START
+            boardEl.style.gridTemplateColumns = 'repeat(5, 1fr)';
+
+            cellsOrder.forEach(num => {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.id = `cell-${num}`;
+
+                if (num === 0) {
+                    cell.style.gridColumn = 'span 5'; // Fila completa para START
+                    cell.classList.add('start-cell');
+                    cell.innerHTML = `
+                        <span class="cell-num">SALIDA</span>
+                        <span class="cell-icon">🚩 START</span>
+                        <div class="tokens-container" id="tokens-cell-0"></div>
+                    `;
+                } else {
+                    let icon = '';
+                    if (num === 25) { cell.classList.add('meta'); icon = '🏆 Meta'; }
+                    cell.innerHTML = `
+                        <span class="cell-num">${num}</span>
+                        <span class="cell-icon">${icon}</span>
+                        <div class="tokens-container" id="tokens-cell-${num}"></div>
+                    `;
+                }
+                
+                boardEl.appendChild(cell);
+            });
+
+            renderTokens();
+        }
+
+        function getCellCenter(cellNum) {
+            const cell = document.getElementById(`cell-${cellNum}`);
+            if (!cell) return { x: 0, y: 0 };
+
+            const boardRect = boardEl.getBoundingClientRect();
+            const cellRect = cell.getBoundingClientRect();
+
+            return {
+                x: (cellRect.left + cellRect.width / 2) - boardRect.left,
+                y: (cellRect.top + cellRect.height / 2) - boardRect.top
+            };
+        }
+
+        function drawSnakesAndLadders() {
+            const boardRect = boardEl.getBoundingClientRect();
+            canvas.width = boardRect.width;
+            canvas.height = boardRect.height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            Object.keys(boardSpecialCells).forEach(startCell => {
+                const spec = boardSpecialCells[startCell];
+                const startPos = getCellCenter(startCell);
+                const endPos = getCellCenter(spec.target);
+
+                if (startPos.x === 0 && startPos.y === 0) return;
+
+                if (spec.type === 'ladder') {
+                    drawLadder(startPos, endPos, spec.color);
+                } else if (spec.type === 'snake') {
+                    drawSnake(startPos, endPos, spec.color);
+                }
+            });
+        }
+
+        function drawLadder(start, end, color) {
+            const dx = end.x - start.x;
+            const dy = end.y - start.y;
+            const angle = Math.atan2(dy, dx);
+            const distance = Math.hypot(dx, dy);
+            const width = 20;
+
+            ctx.save();
+            ctx.translate(start.x, start.y);
+            ctx.rotate(angle);
+
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(0, -width / 2);
+            ctx.lineTo(distance, -width / 2);
+            ctx.moveTo(0, width / 2);
+            ctx.lineTo(distance, width / 2);
+            ctx.stroke();
+
+            const steps = Math.floor(distance / 20);
+            ctx.lineWidth = 3;
+            for (let i = 1; i <= steps; i++) {
+                const px = (distance / (steps + 1)) * i;
+                ctx.beginPath();
+                ctx.moveTo(px, -width / 2);
+                ctx.lineTo(px, width / 2);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function drawSnake(start, end, color) {
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+
+            const midX = (start.x + end.x) / 2 + (start.x > end.x ? 20 : -20);
+            const midY = (start.y + end.y) / 2;
+
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.quadraticCurveTo(midX, midY, end.x, end.y);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([5, 10]);
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.quadraticCurveTo(midX, midY, end.x, end.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(start.x, start.y, 9, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(start.x - 3, start.y - 2, 2.5, 0, Math.PI * 2);
+            ctx.arc(start.x + 3, start.y - 2, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.arc(start.x - 3, start.y - 2, 1.2, 0, Math.PI * 2);
+            ctx.arc(start.x + 3, start.y - 2, 1.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function renderTokens() {
+            for (let i = 0; i <= 25; i++) {
+                const container = document.getElementById(`tokens-cell-${i}`);
+                if (container) container.innerHTML = '';
+            }
+
+            players.forEach(player => {
+                const container = document.getElementById(`tokens-cell-${player.position}`);
+                if (container) {
+                    const token = document.createElement('div');
+                    token.className = 'player-token';
+                    token.style.borderColor = player.color;
+                    token.textContent = player.avatar;
+                    token.title = `${player.name} (${player.avatar})`;
+                    container.appendChild(token);
+                }
+            });
+        }
+
+        function updateUI() {
+            const activePlayer = players[currentTurnIndex];
+            currentPlayerName.innerHTML = `${activePlayer.avatar} ${activePlayer.name}`;
+            currentPlayerName.style.backgroundColor = activePlayer.color;
+
+            playersScoresBar.innerHTML = '';
+            players.forEach(p => {
+                const tag = document.createElement('div');
+                tag.className = 'p-score-tag';
+                tag.style.backgroundColor = p.color;
+                const posName = p.position === 0 ? 'START' : `Casilla ${p.position}`;
+                tag.innerHTML = `<span>${p.avatar} ${p.name}:</span> ${posName} (${p.score} pts)`;
+                playersScoresBar.appendChild(tag);
+            });
+
+            renderTokens();
+        }
+
+        function rollDice() {
+            if (isDiceRolled) return;
+            btnRoll.disabled = true;
+
+            const rolled = Math.floor(Math.random() * 6) + 1;
+            const player = players[currentTurnIndex];
+            
+            turnStartPos = player.position;
+
+            flatDice.classList.add('rolling');
+
+            setTimeout(() => {
+                flatDice.classList.remove('rolling');
+                flatDice.className = `flat-dice face-${rolled}`;
+
+                player.position = Math.min(25, player.position + rolled);
+                
+                let boardExtraMsg = "";
+                if (boardSpecialCells[player.position]) {
+                    const spec = boardSpecialCells[player.position];
+                    player.position = spec.target;
+                    boardExtraMsg = spec.type === 'ladder' 
+                        ? ` ¡Subes por la escalera a la casilla ${player.position}! 🪜` 
+                        : ` ¡Caes por la serpiente a la casilla ${player.position}! 🐍`;
+                }
+
+                updateUI();
+
+                const hasRandomQuestion = (player.position > 0 && player.position < 25) && Math.random() < 0.55;
+
+                if (hasRandomQuestion) {
+                    diceInstruction.textContent = `${player.avatar} ${player.name} avanzó a la casilla ${player.position}.${boardExtraMsg} ¡Apareció un Desafío Sorpresa!`;
+                    showRandomQuestion();
+                } else {
+                    feedbackIcon.textContent = player.avatar;
+                    feedbackTitle.textContent = `Turno de ${player.name}`;
+                    feedbackMessage.textContent = `${player.avatar} ${player.name} sacó un ${rolled} y avanzó a la casilla ${player.position}.${boardExtraMsg}`;
+                    feedbackMovement.textContent = "Casilla libre (Sin Pregunta). Turno finalizado.";
+                    feedbackModal.classList.add('active');
+                }
+
+                isDiceRolled = true;
+            }, 600);
+        }
+
+        function getRandomQuestion() {
+            if (availableQuestions.length === 0) availableQuestions = [...questionBank];
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            const selectedQuestion = availableQuestions[randomIndex];
+            availableQuestions.splice(randomIndex, 1);
+            return selectedQuestion;
+        }
+
+        function showRandomQuestion() {
+            const q = getRandomQuestion();
+            questionCategory.textContent = q.category;
+            questionText.textContent = q.text;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt.text;
+                btn.addEventListener('click', () => handleAnswer(opt, q));
+                optionsContainer.appendChild(btn);
+            });
+
+            questionBox.classList.remove('hidden');
+        }
+
+        function handleAnswer(option, questionObj) {
+            questionBox.classList.add('hidden');
+            const player = players[currentTurnIndex];
+            let moveMessage = "";
+
+            if (option.correct) {
+                player.score += 50;
+                player.position = Math.min(25, player.position + 1);
+                
+                feedbackIcon.textContent = "🎉";
+                feedbackTitle.textContent = `¡Respuesta Correcta de ${player.avatar} ${player.name}!`;
+                feedbackMessage.textContent = questionObj.feedbackCorrect;
+                moveMessage = `¡Excelente! Avanzas 1 casilla extra (a la casilla ${player.position}) y ganas +50 pts.`;
+            } else {
+                player.position = turnStartPos;
+                const posName = player.position === 0 ? 'START' : `casilla ${player.position}`;
+                
+                feedbackIcon.textContent = "💡";
+                feedbackTitle.textContent = `Reflexión para ${player.avatar} ${player.name}`;
+                feedbackMessage.textContent = questionObj.feedbackIncorrect;
+                moveMessage = `Respuesta incorrecta. Pierdes el tiro del dado y regresas a ${posName}.`;
+            }
+
+            if (boardSpecialCells[player.position]) {
+                const spec = boardSpecialCells[player.position];
+                player.position = spec.target;
+                moveMessage += spec.type === 'ladder' 
+                    ? ` ¡Llegaste a una escalera y subes a la casilla ${player.position}! 🪜` 
+                    : ` ¡Caíste en una serpiente y bajas a la casilla ${player.position}! 🐍`;
+            }
+
+            feedbackMovement.textContent = moveMessage;
+            updateUI();
+            feedbackModal.classList.add('active');
+        }
+
+        function closeModal() {
+            feedbackModal.classList.remove('active');
+            
+            const winner = players.find(p => p.position >= 25);
+            if (winner) {
+                showEndScreen(winner);
+            } else {
+                currentTurnIndex = (currentTurnIndex + 1) % players.length;
+                btnRoll.disabled = false;
+                isDiceRolled = false;
+                updateUI();
+                diceInstruction.textContent = `Turno de ${players[currentTurnIndex].avatar} ${players[currentTurnIndex].name}. ¡Tira el dado!`;
+            }
+        }
+
+        function showEndScreen(winner) {
+            gameScreen.classList.remove('active');
+            endScreen.classList.add('active');
+
+            winnerAnnouncement.textContent = `🏆 ¡${winner.avatar} ${winner.name} ha llegado a la META y gana la partida!`;
+            winnerAnnouncement.style.color = winner.color;
+
+            finalScoreboard.innerHTML = '';
+            players.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'p-score-tag';
+                card.style.backgroundColor = p.color;
+                card.style.padding = '10px 20px';
+                card.style.fontSize = '1.1rem';
+                card.innerHTML = `${p.avatar} ${p.name}: ${p.score} pts (Casilla ${p.position})`;
+                finalScoreboard.appendChild(card);
+            });
+        }
+
+        function restartGame() {
+            endScreen.classList.remove('active');
+            welcomeScreen.classList.add('active');
+        }
+    </script>
+</body>
+</html>
+
