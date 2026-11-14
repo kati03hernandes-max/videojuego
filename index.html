@@ -50,7 +50,6 @@
             max-width: 1000px;
         }
 
-        /* BOTÓN FLOTANTE DE MÚSICA */
         .music-btn {
             position: fixed;
             top: 15px;
@@ -387,6 +386,7 @@
             background: #f3e8ff; color: #7e22ce;
             padding: 4px 10px; border-radius: 6px;
             font-size: 0.8rem; font-weight: 700;
+            display: inline-block;
         }
 
         .question-text { font-size: 0.95rem; margin: 12px 0; line-height: 1.4; }
@@ -505,7 +505,7 @@
                     </div>
 
                     <div id="question-box" class="question-box hidden">
-                        <span id="question-category" class="category-tag">Desafío Emoción Primaria ❓</span>
+                        <span id="question-category" class="category-tag">Desafío Emocional ❓</span>
                         <h3 id="question-text" class="question-text">Pregunta...</h3>
                         <div id="options-container" class="options-container"></div>
                     </div>
@@ -536,14 +536,14 @@
                         <div class="tool-icon">🔍</div>
                         <div>
                             <strong>Escucha las señales de tu cuerpo:</strong>
-                            <p>El ritmo cardíaco y la presión estomacal son alertas tempranas de nervios o ansiedad.</p>
+                            <p>El ritmo cardíaco y el nudo estomacal son alertas tempranas de miedo.</p>
                         </div>
                     </div>
                     <div class="tool-item">
                         <div class="tool-icon">🧘‍♂️</div>
                         <div>
                             <strong>Pausa de respiración profunda:</strong>
-                            <p>Respirar 5 segundos ayuda a mantener la calma en los momentos de frustración.</p>
+                            <p>Respirar 5 segundos ayuda a regular el enfado y la rabia en momentos de tensión.</p>
                         </div>
                     </div>
                     <div class="tool-item">
@@ -557,7 +557,7 @@
                         <div class="tool-icon">🤝</div>
                         <div>
                             <strong>Apoyo Mutuo y Empatía:</strong>
-                            <p>Pedir ayuda a adultos de confianza y escuchar a tus amigos crea comunidades fuertes.</p>
+                            <p>Pedir ayuda a adultos de confianza y acompañar la tristeza de tus amigos fortalece al grupo.</p>
                         </div>
                     </div>
                 </div>
@@ -580,73 +580,95 @@
 
         let boardSpecialCells = {};
 
-        // BANCO DE PREGUNTAS CENTRADO EN EMOCIONES PRIMARIAS / BÁSICAS
+        // BANCO DE PREGUNTAS: TRIVIA DE GESTIÓN EMOCIONAL (EMOCIONES PRIMARIAS)
         const questionBank = [
             {
-                category: "Emoción Primaria: Tristeza",
-                text: "Expresas: 'Me siento solo/a', 'Me desmotiva todo' o 'Estoy sufriendo'. ¿A qué emoción primaria corresponden estos sentimientos?",
+                category: "1. Poner nombre a lo que siento (Alfabetización Emocional)",
+                text: "Estás en clase, el profesor va a entregar los exámenes y sientes un 'nudo en el estómago' y el corazón acelerado. ¿Qué emoción estás experimentando?",
                 options: [
-                    { text: "A) Alegría", correct: false },
-                    { text: "B) Tristeza", correct: true },
-                    { text: "C) Enfado / Rabia", correct: false }
+                    { text: "A) Sorpresa", correct: false },
+                    { text: "B) Miedo", correct: true },
+                    { text: "C) Asco y rechazo", correct: false }
                 ],
-                feedbackCorrect: "¡Muy bien! Sentirse desganado, solo o desmotivado son manifestaciones básicas de la Tristeza.",
-                feedbackIncorrect: "Estas expresiones nacen de la Tristeza, una emoción primaria fundamental para procesar la pérdida o el dolor."
+                feedbackCorrect: "¡Muy bien! Escuchar las señales de tu cuerpo te permite identificar el miedo antes de un examen.",
+                feedbackIncorrect: "El nudo en el estómago y el corazón acelerado son señales físicas de la emoción primaria del Miedo."
             },
             {
-                category: "Emoción Primaria: Enfado / Rabia",
-                text: "Dices: 'Me pone furioso/a', 'Siento que es injusto' o 'Me siento muy enojado/a'. ¿Cuál es la emoción primaria base?",
+                category: "1. Poner nombre a lo que siento (Alfabetización Emocional)",
+                text: "Tu mejor amigo se fue a jugar con otro grupo y no te habla. ¿Cómo te hace sentir eso?",
                 options: [
-                    { text: "A) Enfado / Rabia", correct: true },
-                    { text: "B) Asco / Rechazo", correct: false },
+                    { text: "A) Me siento solo (Tristeza)", correct: true },
+                    { text: "B) Alegría", correct: false },
                     { text: "C) Sorpresa", correct: false }
                 ],
-                feedbackCorrect: "¡Excelente! La rabia o el enfado son la emoción primaria ante la percepción de una injusticia o amenaza.",
-                feedbackIncorrect: "La furia y el enojo se agrupan dentro de la emoción primaria del Enfado o Rabia."
+                feedbackCorrect: "¡Excelente! Reconocer que sientes tristeza al quedarte solo evita que reacciones con agresividad.",
+                feedbackIncorrect: "Sentirse solo cuando un amigo se aleja forma parte de la emoción primaria de la Tristeza."
             },
             {
-                category: "Emoción Primaria: Alegría",
-                text: "Te sientes eufórico/a, ilusionado/a, a gusto o dices '¡Me encanta!'. ¿A qué emoción primaria pertenecen?",
+                category: "1. Poner nombre a lo que siento (Alfabetización Emocional)",
+                text: "Llevas intentando armar o resolver un problema de matemáticas por media hora y no te sale. Sientes ganas de tirar todo. ¿Qué emoción es?",
                 options: [
-                    { text: "A) Calma", correct: false },
-                    { text: "B) Alegría", correct: true },
-                    { text: "C) Sorpresa", correct: false }
+                    { text: "A) Tristeza", correct: true },
+                    { text: "B) Miedo", correct: false },
+                    { text: "C) Amor", correct: false }
                 ],
-                feedbackCorrect: "¡Correcto! El buen humor, la ilusión y el entusiasmo forman parte de la emoción primaria de la Alegría.",
-                feedbackIncorrect: "La euforia, ilusión y felicidad son ramificaciones directas de la Alegría."
+                feedbackCorrect: "¡Bien identificado! Detectar esa tristeza y desánimo a tiempo te permite hacer una pausa saludable.",
+                feedbackIncorrect: "Cuando algo no sale tras intentarlo mucho, surge la Tristeza y el desgano; detectarlo ayuda a hacer una pausa."
             },
             {
-                category: "Emoción Primaria: Sorpresa",
-                text: "Dices: 'Estoy perplejo/a', 'Siento curiosidad' o 'Estoy desconcertado/a'. ¿Qué emoción primaria estás experimentando?",
+                category: "2. Aprender a gestionar las emociones (Autorregulación)",
+                text: "En un juego en equipo, un compañero comete un error y pierden el partido. Sientes mucho Enfado/Rabia. ¿Cómo actuarías?",
                 options: [
-                    { text: "A) Sorpresa", correct: true },
-                    { text: "B) Tristeza", correct: false },
-                    { text: "C) Enfado", correct: false }
+                    { text: "A) Gritarle a tu compañero para desahogarte.", correct: false },
+                    { text: "B) Tomar 5 segundos de respiración profunda y decirle: 'Estuvo cerca, en la próxima nos recuperaremos'.", correct: true },
+                    { text: "C) Salirte del grupo sin decir nada y no volver a jugar.", correct: false }
                 ],
-                feedbackCorrect: "¡Muy bien! Estar asombrado, impresionado o confundido corresponde a la emoción primaria de la Sorpresa.",
-                feedbackIncorrect: "El asombro y la curiosidad son reacciones típicas de la emoción primaria de Sorpresa."
+                feedbackCorrect: "¡Gran autorregulación! Respirar 5 segundos calma el enfado/rabia y protege el ánimo del equipo.",
+                feedbackIncorrect: "Gritar o irse alimenta el enfado/rabia. Respirar 5 segundos ayuda a regular la emoción antes de actuar."
             },
             {
-                category: "Emoción Primaria: Asco y Rechazo",
-                text: "Sientes aversión, dices 'No me gusta' o 'Me siento excluido/a'. ¿Qué emoción primaria se está manifestando?",
+                category: "2. Aprender a gestionar las emociones (Autorregulación)",
+                text: "Mañana tienes que hablar en público frente a toda la escuela y tu mente dice: 'Me voy a equivocar y todos se van a reír'. ¿Cómo puedes cambiar ese pensamiento?",
                 options: [
-                    { text: "A) Tristeza", correct: false },
-                    { text: "B) Asco y Rechazo", correct: true },
-                    { text: "C) Alegría", correct: false }
+                    { text: "A) 'Me voy a enfermar para no ir a la escuela'.", correct: false },
+                    { text: "B) 'Estoy preparado, si cometo un error es normal y puedo continuar'.", correct: true },
+                    { text: "C) Obligarme a no pensar en nada.", correct: false }
                 ],
-                feedbackCorrect: "¡Exacto! El asco y el rechazo son respuestas primarias para protegernos o marcar distancia.",
-                feedbackIncorrect: "Sentir repugnancia o rechazo hacia algo se clasifica en la emoción primaria de Asco."
+                feedbackCorrect: "¡Excelente reencuadre! Transformaste un pensamiento de miedo en confianza y seguridad.",
+                feedbackIncorrect: "El reencuadre cognitivo consiste en cambiar el miedo por un pensamiento realista y positivo."
             },
             {
-                category: "Emoción Primaria: Calma y Amor",
-                text: "Dices: 'Me siento sereno/a', 'Siento paz', 'Siento confianza' y 'Siento cariño'. ¿Qué estado o emoción primaria predomina?",
+                category: "2. Aprender a gestionar las emociones (Autorregulación)",
+                text: "Estás muy triste porque se rompió algo importante para ti. ¿Qué es lo más saludable que puedes hacer con esa tristeza?",
                 options: [
-                    { text: "A) Calma y Amor", correct: true },
-                    { text: "B) Sorpresa", correct: false },
-                    { text: "C) Rabia", correct: false }
+                    { text: "A) Guardarla y fingir que no te importa.", correct: false },
+                    { text: "B) Permitirte sentir, llorar si lo necesitas y escribir o dibujar cómo te sientes.", correct: true },
+                    { text: "C) Desquitarte con tu hermano/a.", correct: false }
                 ],
-                feedbackCorrect: "¡Hermosa respuesta! La serenidad, la paz, el cariño y la confianza brotan de la Calma y el Amor.",
-                feedbackIncorrect: "Sentir paz, respeto y cariño corresponde al núcleo protector de la Calma y el Amor."
+                feedbackCorrect: "¡Exacto! Expresar la tristeza dibujando, escribiendo o llorando ayuda a procesarla de forma sana.",
+                feedbackIncorrect: "Reprimir la tristeza o desquitarte con otros hace daño; expresarla de forma creativa la libera."
+            },
+            {
+                category: "3. ¿Qué hacer si estamos mal? (Cómo pedir y dar ayuda)",
+                text: "Llevas varios días sintiéndote abrumado, con mucha tristeza o miedo y no sabes qué hacer. ¿Cuál es el paso más valiente e inteligente?",
+                options: [
+                    { text: "A) Quedarte callado y esperar a que pase solo.", correct: false },
+                    { text: "B) Buscar a un adulto de confianza (padres, profesor, orientador) y decirle: 'No me siento bien y necesito ayuda'.", correct: true },
+                    { text: "C) Aislarte en tu habitación y no hablar con nadie.", correct: false }
+                ],
+                feedbackCorrect: "¡Muy valiente! Pedir ayuda a un adulto de confianza es la mejor herramienta cuando la tristeza o el miedo pesan mucho.",
+                feedbackIncorrect: "Aislarte prolonga el malestar. Buscar a un adulto de confianza es el paso más seguro e inteligente."
+            },
+            {
+                category: "3. ¿Qué hacer si estamos mal? (Cómo pedir y dar ayuda)",
+                text: "Notas que un compañero de tu grupo está muy callado, aislado y se nota triste después de una mala nota. ¿Cómo puedes ayudarlo?",
+                options: [
+                    { text: "A) Decirle enfrente de todos: '¡Oye, ya no estés triste, no es para tanto!'", correct: false },
+                    { text: "B) Acercarte en privado y decirle: 'Vi lo que pasó, si necesitas hablar o simplemente estar acompañado, aquí estoy'.", correct: true },
+                    { text: "C) Ignorarlo para no incomodar.", correct: false }
+                ],
+                feedbackCorrect: "¡Hermosa empatía! Acompañar en privado valida su tristeza y fortalece las emociones positivas del grupo.",
+                feedbackIncorrect: "Minimizar su tristeza en público incomoda; ofrecer apoyo cercano y respetuoso transforma su entorno."
             }
         ];
 
@@ -657,7 +679,6 @@
         let turnStartPos = 0;
         let availableQuestions = [];
 
-        // CONTROL DE MÚSICA DE FONDO
         const bgMusic = document.getElementById('bg-music');
         const btnMusic = document.getElementById('btn-music');
         let isMusicPlaying = false;
