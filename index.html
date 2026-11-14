@@ -550,14 +550,14 @@
                         <div class="tool-icon">💡</div>
                         <div>
                             <strong>Reencuadre Cognitivo:</strong>
-                            <p>Sustituye la duda con: "Si cometo un error es normal, aprendo y sigo intentando".</p>
+                            <p>Sustituye el miedo con: "Si cometo un error es normal, aprendo y sigo intentando".</p>
                         </div>
                     </div>
                     <div class="tool-item">
                         <div class="tool-icon">🤝</div>
                         <div>
-                            <strong>Apoyo Mutuo y Empatía:</strong>
-                            <p>Pedir ayuda a adultos de confianza y acompañar la tristeza de tus amigos fortalece al grupo.</p>
+                            <strong>Clima Emocional Positivo:</strong>
+                            <p>Pedir ayuda, acompañar la tristeza y contagiar alegría y calma fortalece a todo el grupo.</p>
                         </div>
                     </div>
                 </div>
@@ -580,8 +580,9 @@
 
         let boardSpecialCells = {};
 
-        // BANCO DE PREGUNTAS: TRIVIA DE GESTIÓN EMOCIONAL (EMOCIONES PRIMARIAS)
+        // BANCO COMPLETO DE 11 PREGUNTAS (4 BLOQUES - EMOCIONES PRIMARIAS)
         const questionBank = [
+            // BLOQUE 1
             {
                 category: "1. Poner nombre a lo que siento (Alfabetización Emocional)",
                 text: "Estás en clase, el profesor va a entregar los exámenes y sientes un 'nudo en el estómago' y el corazón acelerado. ¿Qué emoción estás experimentando?",
@@ -610,11 +611,13 @@
                 options: [
                     { text: "A) Tristeza", correct: true },
                     { text: "B) Miedo", correct: false },
-                    { text: "C) Amor", correct: false }
+                    { text: "C) Alegría", correct: false }
                 ],
                 feedbackCorrect: "¡Bien identificado! Detectar esa tristeza y desánimo a tiempo te permite hacer una pausa saludable.",
                 feedbackIncorrect: "Cuando algo no sale tras intentarlo mucho, surge la Tristeza y el desgano; detectarlo ayuda a hacer una pausa."
             },
+
+            // BLOQUE 2
             {
                 category: "2. Aprender a gestionar las emociones (Autorregulación)",
                 text: "En un juego en equipo, un compañero comete un error y pierden el partido. Sientes mucho Enfado/Rabia. ¿Cómo actuarías?",
@@ -648,6 +651,8 @@
                 feedbackCorrect: "¡Exacto! Expresar la tristeza dibujando, escribiendo o llorando ayuda a procesarla de forma sana.",
                 feedbackIncorrect: "Reprimir la tristeza o desquitarte con otros hace daño; expresarla de forma creativa la libera."
             },
+
+            // BLOQUE 3
             {
                 category: "3. ¿Qué hacer si estamos mal? (Cómo pedir y dar ayuda)",
                 text: "Llevas varios días sintiéndote abrumado, con mucha tristeza o miedo y no sabes qué hacer. ¿Cuál es el paso más valiente e inteligente?",
@@ -669,6 +674,41 @@
                 ],
                 feedbackCorrect: "¡Hermosa empatía! Acompañar en privado valida su tristeza y fortalece las emociones positivas del grupo.",
                 feedbackIncorrect: "Minimizar su tristeza en público incomoda; ofrecer apoyo cercano y respetuoso transforma su entorno."
+            },
+
+            // BLOQUE 4
+            {
+                category: "4. Transformar el entorno y contagiar emociones positivas",
+                text: "Es el primer día de clases de un compañero nuevo y se queda parado solo en la esquina del salón con cara de Miedo. ¿Cómo puedes transformar ese ambiente?",
+                options: [
+                    { text: "A) Ignorarlo para que se acostumbre solo.", correct: false },
+                    { text: "B) Acercarte con una sonrisa, presentarte e invitarlo a jugar para generar emociones positivas (Calma y Alegría).", correct: true },
+                    { text: "C) Reírte con tus amigos porque se ve nervioso.", correct: false }
+                ],
+                feedbackCorrect: "¡Increíble! Tu amabilidad transforma su miedo en calma y alegría, creando un ambiente acogedor.",
+                feedbackIncorrect: "Ignorar o reírse aumenta su miedo; incluirlo con una sonrisa contagia calma y alegría."
+            },
+            {
+                category: "4. Transformar el entorno y contagiar emociones positivas",
+                text: "Tu equipo logró terminar un proyecto difícil y todos están celebrando con mucha Alegría, pero otro equipo está triste porque no alcanzó a terminar. ¿Cuál es la mejor actitud?",
+                options: [
+                    { text: "A) Presumirles que ustedes sí pudieron y ellos no.", correct: false },
+                    { text: "B) Celebrar con respeto y ofrecerles ánimo o ayuda para la próxima vez.", correct: true },
+                    { text: "C) Burlarse de su trabajo para sentirse superiores.", correct: false }
+                ],
+                feedbackCorrect: "¡Excelente actitud! Compartir tu alegría con respeto y apoyar a los que están tristes mejora la convivencia.",
+                feedbackIncorrect: "Presumir o burlarse empeora su tristeza; celebrar con respeto y dar ánimo contagia emociones positivas."
+            },
+            {
+                category: "4. Transformar el entorno y contagiar emociones positivas",
+                text: "Antes de iniciar una exposición o competencia grupal, notas que todo tu equipo tiene Miedo y Enfado por los nervios. ¿Qué puedes decirles para cambiar el estado de ánimo del grupo?",
+                options: [
+                    { text: "A) 'Va a salir todo mal y vamos a perder'.", correct: false },
+                    { text: "B) 'Respiremos juntos un momento, vamos a disfrutar pase lo que pase y demos todo de nosotros'.", correct: true },
+                    { text: "C) Enojarte con ellos porque no se tranquilizan y gritarles.", correct: false }
+                ],
+                feedbackCorrect: "¡Gran liderazgo emocional! Ayudas a calmar el miedo y el enfado colectivo para disfrutar con alegría.",
+                feedbackIncorrect: "Gritar o ser pesimista aumenta el miedo y el enfado del grupo; respirar juntos transforma el clima emocional."
             }
         ];
 
